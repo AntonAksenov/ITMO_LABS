@@ -1,17 +1,14 @@
 package labaAlgS2E1;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import javafx.util.Pair;
+import java.util.*;
 
 public class Bridges {
-    static ArrayList<Integer>[] edges;
+    static ArrayList<Pair<Integer, Integer>>[] edges;
     static boolean[] used;
     static int[] backEdgeTime;
     static int t;
     static int[] inTime;
-    static Map<String, Integer> edgesMap = new HashMap<>();
     static ArrayList<Integer> ans = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -28,32 +25,38 @@ public class Bridges {
         }
 
         for (int i = 0; i < m; i++) {
-            int v = in.nextInt() - 1, u = in.nextInt() - 1;
-            edges[u].add(v);
-            edges[v].add(u);
-            edgesMap.put(v + " " + u, i + 1);
+            int v = in.nextInt() - 1;
+            int u = in.nextInt() - 1;
+            edges[u].add(new Pair<>(v, i + 1));
+            edges[v].add(new Pair<>(u, i + 1));
         }
 
         for (int i = 0; i < n; i++) {
-            dfs(i, -1);
+            if (!used[i]) {
+                dfs(i, -1);
+            }
         }
 
         System.out.println(ans.size());
-        for(int i=0; i<ans.size();i++) {
+        ans.sort(Integer::compareTo);
+        for (int i = 0; i < ans.size(); i++) {
             System.out.print(ans.get(i) + " ");
         }
     }
 
     static void dfs(int v, int p) {
-        if (!used[v]) {
-            used[v] = true;
-            inTime[v] = backEdgeTime[v] = t++;
-            for (int u : edges[v]) {
-                if (u != p) {
+        used[v] = true;
+        inTime[v] = backEdgeTime[v] = t++;
+        for (Pair<Integer, Integer> edge : edges[v]) {
+            int u = edge.getKey();
+            if (u != p) {
+                if (used[u]) {
+                    backEdgeTime[v] = Math.min(backEdgeTime[v], inTime[u]);
+                } else {
                     dfs(u, v);
                     backEdgeTime[v] = Math.min(backEdgeTime[v], backEdgeTime[u]);
                     if (backEdgeTime[u] > inTime[v]) {
-                        ans.add(edgesMap.get(v + " " + u));
+                        ans.add(edge.getValue());
                     }
                 }
             }
@@ -61,3 +64,15 @@ public class Bridges {
     }
 
 }
+
+//6 7
+//1 2
+//2 3
+//3 4
+//1 3
+//4 5
+//4 6
+//5 6
+//
+//1
+//3
