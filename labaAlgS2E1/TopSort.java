@@ -6,14 +6,14 @@ import java.util.Stack;
 
 public class TopSort {
     static ArrayList<Integer>[] edges;
-    static boolean[] used;
+    static int[] used;
     static Stack<Integer> ans = new Stack<>();
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int n = in.nextInt(), m = in.nextInt();
         edges = new ArrayList[n];
-        used = new boolean[n];
+        used = new int[n];
 
         for (int i = 0; i < n; i++) {
             edges[i] = new ArrayList();
@@ -24,9 +24,7 @@ public class TopSort {
         }
 
         for (int i = 0; i < n; i++) {
-            if (!used[i]) {
-                dfs(i);
-            }
+            dfs(i);
         }
 
         while (!ans.empty()) {
@@ -35,13 +33,17 @@ public class TopSort {
     }
 
     static void dfs(int v) {
-        used[v] = true;
-        for (int u : edges[v]) {
-            if (!used[u]) {
+        if (used[v] == 1) {
+            System.out.println(-1);
+            System.exit(0);
+        } else if (used[v] != 2) {
+            used[v] = 1;
+            for (int u : edges[v]) {
                 dfs(u);
             }
+            ans.push(v);
+            used[v] = 2;
         }
-        ans.push(v);
     }
 
 }
@@ -53,3 +55,5 @@ public class TopSort {
 //2 5
 //6 5
 //4 6
+
+//4 6 3 1 2 5 
