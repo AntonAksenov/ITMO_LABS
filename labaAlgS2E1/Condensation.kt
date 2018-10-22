@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
     
     for (v in 0 until n) {
         for (u in edges[v]) {
-            if (component[v] != component[u] && !edgesSet.contains(Pair(component[v], component[u]))) {
+            if (component[v] != component[u]) {
                 edgesSet.add(Pair(component[v], component[u]))
             }
         }
