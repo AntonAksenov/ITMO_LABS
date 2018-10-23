@@ -1,6 +1,7 @@
 package labaAlgS2E1
 
 import java.util.*
+import kotlin.math.min
 import kotlin.math.sqrt
 
 object FlatMinSpanningTree {
@@ -9,71 +10,39 @@ object FlatMinSpanningTree {
     fun main(args: Array<String>) {
         val sc = Scanner(System.`in`)
         val n = sc.nextInt()
-
-        val edges = Array(n * n) { Triple(0, 0, 0) }
-        var ans = 0.0
-        val vertex = Array(n) { Pair(sc.nextInt(), sc.nextInt()) }
-
+        val vertex = Array(n) { Pair(0, 0) }
         for (i in 0 until n) {
-            val (x1, y1) = vertex[i]
+            vertex[i] = Pair(sc.nextInt() - 1, sc.nextInt() - 1)
+        }
+
+        val dist = Array(n) { Double.MAX_VALUE }
+        dist[0] = 0.0
+        val used = BooleanArray(n) { false }
+        var ans = 0.0
+        for (i in 0 until n) {
+            var minDist = Double.MAX_VALUE
+            var u = 0
             for (j in 0 until n) {
-                val (x2, y2) = vertex[j]
-                edges[i * n + j] = Triple((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2), i, j)
-            }
-        }
-
-        edges.sortWith(kotlin.Comparator { o1, o2 ->
-            if (o1.first < o2.first) {
-                1
-            } else if (o1.first > o2.first) {
-                -1
-            } else {
-                if (o1.second < o2.second) {
-                    1
-                } else if (o1.second > o2.second) {
-                    -1
-                } else {
-                    if (o1.third < o2.third) {
-                        1
-                    } else if (o1.third > o2.third) {
-                        -1
-                    } else {
-                        0
-                    }
+                if (!used[j] && dist[j] < minDist) {
+                    minDist = dist[j]
+                    u = j
                 }
             }
-        })
-        val treeId = Array(n) { it }
-
-        for (i in 0 until edges.size) {
-            val (l, v, u) = edges[i]
-            if (treeId[v] != treeId[u]) {
-                ans += sqrt(l.toDouble())
-                val oldId = treeId[u]
-                val newId = treeId[v]
-                for (j in 0 until n) {
-                    if (treeId[j] == oldId) {
-                        treeId[j] = newId
-                    }
-                }
+            ans += minDist
+            used[u] = true
+            for (v in 0 until n) {
+                val (x1, y1) = vertex[v]
+                val (x2, y2) = vertex[u]
+                dist[v] = min(dist[v], sqrt(((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)).toDouble())
+                )
             }
         }
-
-        println(ans)
+        print(ans)
     }
 }
 
-        /*
-        while (!q.isEmpty()) {
-            val v = q.poll()
-            used[v] = true
-            repeat(n) {
-                if (!used[it] && edges[v][it] < d[it]) {
-                    d[it] = sqrt(edges[v][it])
-                    p[it] = v
-                }
-            }
-            if (p[v] != -1) {
-                ans += edges[p[v]][v]
-            }
-        }*/
+//2
+//0 0
+//1 1
+
+//1.4142135624
