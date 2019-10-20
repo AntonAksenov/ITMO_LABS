@@ -14,7 +14,7 @@ static std::vector<int> component;
 
 void paint(int v, int color, int e) {
     used[v] = true;
-    for (std::pair pair : edges[v]) {
+    for (std::pair<int,int> pair : edges[v]) {
         int u = pair.first;
         int k = pair.second;
         if (k != e) {
@@ -36,7 +36,7 @@ void paint(int v, int color, int e) {
 void dfs(int v, int e) {
     used[v] = true;
     inTime[v] = backEdgeTime[v] = t++;;
-    for (std::pair pair : edges[v]) {
+    for (std::pair<int,int> pair : edges[v]) {
         int u = pair.first;
         int k = pair.second;
         if (k != e) {
@@ -86,14 +86,3 @@ int main() {
     }
     return 0;
 }
-
-//5 6
-//1 2
-//2 3
-//3 1
-//1 4
-//4 5
-//5 1
-
-//2
-//1 1 1 2 2 2 
